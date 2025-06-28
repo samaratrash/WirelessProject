@@ -236,7 +236,7 @@ def qn2():
             error = f"An unexpected error occurred during calculation: {err}"
             print(f"Unexpected Error in Q2: {err}")
 
-    return render_template("Question2.html", inputs=inputs, results=results, explanation=explanation, error=error)
+    return render_template("question2.html", inputs=inputs, results=results, explanation=explanation, error=error)
 
 
 # Route: Question 3  – Link Budget
@@ -500,7 +500,7 @@ def q4():
             print(f"Unexpected Error in Q4: {err}")
 
 
-    return render_template("Question4.html", inputs=inputs, results=results, explanation=explanation, error=error)
+    return render_template("question4.html", inputs=inputs, results=results, explanation=explanation, error=error)
 
 
 if __name__ == "__main__":
