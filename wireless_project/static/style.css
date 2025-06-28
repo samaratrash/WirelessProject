@@ -1,0 +1,243 @@
+/* ---------- root palette & globals ---------- */
+:root {
+    --clr-bg-1: #0f2027;
+    --clr-bg-2: #203a43;
+    --clr-bg-3: #2c5364;
+
+    --clr-accent: #00c9a7;
+    --clr-accent-light: #5ef3d3;
+    --clr-text-light: #ffffff;
+    --clr-text-dark: #1e2d3b;
+    --clr-shadow: rgba(0, 0, 0, 0.25);
+    --radius: 14px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    color: var(--clr-text-dark);
+    scroll-behavior: smooth;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    position: relative;
+    min-height: 55vh;
+    background: linear-gradient(135deg, var(--clr-bg-1), var(--clr-bg-2), var(--clr-bg-3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: url("https://www.transparenttextures.com/patterns/cubes.png");
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    max-width: 800px;
+    padding: 0 1rem;
+    color: var(--clr-text-light);
+}
+
+.hero h1 {
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 .75rem;
+}
+
+.hero h1 span {
+    color: var(--clr-accent-light);
+}
+
+.hero p {
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    margin: 0 0 1.5rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 0.8rem 2.2rem;
+    border-radius: var(--radius);
+    background: var(--clr-accent);
+    color: var(--clr-text-light);
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--clr-shadow);
+}
+
+/* ---------- FEATURE GRID ---------- */
+.features {
+    display: grid;
+    gap: 1.8rem;
+    padding: 3rem clamp(1rem, 6vw, 4rem);
+    max-width: 1200px;
+    margin-inline: auto;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.feature-card {
+    background: #ffffff;
+    border-radius: var(--radius);
+    padding: 2rem 1.6rem 2.4rem;
+    box-shadow: 0 4px 18px var(--clr-shadow);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+}
+
+.feature-card h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.75rem;
+    color: var(--clr-bg-2);
+}
+
+.feature-card p {
+    font-size: 0.95rem;
+    flex: 1;
+    margin: 0 0 1.25rem;
+}
+
+.btn-ghost {
+    align-self: center;
+    padding: 0.55rem 1.4rem;
+    border-radius: var(--radius);
+    background: none;
+    border: 2px solid var(--clr-accent);
+    color: var(--clr-accent);
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.btn-ghost:hover {
+    background: var(--clr-accent);
+    color: var(--clr-text-light);
+}
+
+/* ---------- FOOTER ---------- */
+.site-footer {
+    background: #fafafa;
+    padding: 2rem 1rem;
+    margin-top: 4rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #60708a;
+}
+
+.footer-inner strong {
+    color: var(--clr-text-dark);
+    font-weight: 600;
+}
+
+.date {
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
+/* ---------- RESPONSIVE TWEAKS ---------- */
+@media (max-width: 420px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    .feature-card h2 {
+        font-size: 1.1rem;
+    }
+}
+/* ---------- FORM STYLING ---------- */
+.calc-form .form-row,
+form .form-group {
+    margin-bottom: 16px;
+}
+
+.calc-wrapper {
+    padding: 2rem 1rem;
+}
+
+.form-card {
+    padding: 2rem 2rem 2.5rem;
+}
+
+/* Ensure full-width for button spacing */
+.calc-form button,
+form button {
+    margin-top: 10px;
+}
+/* ---------- RESULT GRID (inputs + results) ---------- */
+.results-row {
+    display: flex;
+    gap: 2rem;            /* space between the two blocks   */
+    flex-wrap: wrap;      /* stack on phones automatically  */
+    margin-top: 1.5rem;
+}
+
+.result-block {
+    flex: 1 1 260px;      /* grow but keep a min-width      */
+    background: #ffffff;
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 14px var(--clr-shadow);
+}
+
+.result-block h3 {
+    margin: 0 0 0.75rem;
+    font-weight: 600;
+    color: var(--clr-bg-2);
+}
+
+.result-block ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+
+.result-block li {
+    font-size: 0.9rem;
+    line-height: 1.45;
+    border-bottom: 1px dashed #e2e8f0;
+    padding: 0.25rem 0;
+}
+
+.error {
+    color: #d33;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+/* Back-to-Home button spacing */
+.back-centre {
+    margin-top: 2rem;          /* space above the button */
+    display: flex;
+    justify-content: center;   /* keep it centered */
+}

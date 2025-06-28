@@ -1,0 +1,129 @@
+<!-- templates/question1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Wireless Communication System – Calculator</title>
+
+    <!-- Poppins font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <!-- One-liner CSS fix for the side-by-side layout -->
+    <style>
+        .results-row      { display:flex; gap:2rem; flex-wrap:wrap; margin-top:1.5rem; }
+        .result-block     { flex:1 1 250px; background:#f4f6fa; padding:1rem 1.5rem; border-radius:8px; }
+        .result-block h3  { margin-top:0; font-weight:600; }
+        .error            { margin-top:1rem; color:#d33; font-weight:600; }
+    </style>
+</head>
+
+<body>
+    <!-- ===== HERO ===== -->
+    <header class="hero small-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>📡 Wireless Communication System</h1>
+            <p>Enter your link parameters and let AI crunch the numbers.</p>
+        </div>
+    </header>
+
+    <!-- ===== CALCULATOR CARD ===== -->
+    <main class="calc-wrapper">
+        <section class="form-card">
+            <form method="POST" class="calc-form">
+                <!-- 2-column grid of inputs -->
+                <div class="form-row">
+                    <label>Signal Bandwidth</label>
+                    <input type="number" step="any" name="signal_bandwidth" required />
+                </div>
+                <div class="form-row">
+                    <label>Bandwidth Unit</label>
+                    <select name="signal_bandwidth_unit">
+                        <option value="Hz">Hz</option>
+                        <option value="kHz">kHz</option>
+                        <option value="MHz">MHz</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Quantizer Bits</label>
+                    <input type="number" name="quantizer_bits" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Source Encoder Compression&nbsp;Rate</label>
+                    <input type="number" step="any" name="source_encoder" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Channel Encoder Rate</label>
+                    <input type="number" step="any" name="channel_encoder" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Interleaver Bits</label>
+                    <input type="number" name="interleaver_bits" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Overhead Bits</label>
+                    <input type="number" step="any" name="overhead_bits" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Voice Duration&nbsp;(ms)</label>
+                    <input type="number" step="any" name="speech_duration" required />
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Calculate</button>
+            </form>
+
+            <!-- ===== RESULTS ROW (inputs + results side-by-side) ===== -->
+            {% if inputs or results %}
+            <div class="results-row">
+                {% if inputs %}
+                <div class="result-block">
+                    <h3>Inputs</h3>
+                    <ul>
+                        {% for key, value in inputs.items() %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if results %}
+                <div class="result-block">
+                    <h3>Results</h3>
+                    <ul>
+                        {% for key, value in results.items() %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if explanation %}
+            <div class="result-block" style="margin-top:1.5rem;">
+                <h3> Explanation</h3>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <div class="back-centre">
+                <a href="/" class="btn-ghost">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

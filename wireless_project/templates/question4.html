@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Cellular System Design – Calculator</title>
+
+    <!-- Font & Style -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+        .results-row      { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .result-block     { flex: 1 1 280px; background: #fff; border-radius: var(--radius); padding: 1rem 1.5rem;
+                            box-shadow: 0 4px 14px var(--clr-shadow); }
+        .result-block h3  { margin: 0 0 0.75rem; font-weight: 600; color: var(--clr-bg-2); }
+        .result-block ul  { list-style: none; margin: 0; padding-left: 0; }
+        .result-block li  { font-size: 0.9rem; line-height: 1.45; border-bottom: 1px dashed #e2e8f0; padding: 0.25rem 0; }
+        .back-centre      { margin-top: 2rem; display: flex; justify-content: center; }
+        .error            { color: #d33; font-weight: 600; margin-top: 1rem; }
+    </style>
+</head>
+
+<body>
+    <!-- ===== HERO ===== -->
+    <header class="hero small-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>🏙️ Cellular System Design</h1>
+            <p>Dimension cells, users, and link budgets for robust coverage.</p>
+        </div>
+    </header>
+
+    <!-- ===== FORM SECTION ===== -->
+    <main class="calc-wrapper">
+        <section class="form-card">
+            <!-- ---------- FORM ---------- -->
+            <form method="POST" class="calc-form">
+                {% for label, name in [
+                    ('Total Area (km²)', 'total_area'),
+                    ('Maximum Users', 'max_num_users'),
+                    ('Average Call Duration', 'avg_call_duration'),
+                    ('Average Call Rate per User', 'avg_call_rate_per_user'),
+                    ('Grade of Service (GOS)', 'GOS'),
+                    ('Signal-to-Interference Ratio (SIR)', 'SIR'),
+                    ('Reference Power P₀', 'P0'),
+                    ('Receiver Sensitivity', 'receiver_sensitivity'),
+                    ('Reference Distance d₀', 'd0'),
+                    ('Path-Loss Exponent (n)', 'path_loss_exponent'),
+                    ('Time Slots per Carrier', 'time_slots_per_carrier')
+                ] %}
+                <div class="form-row">
+                    <label>{{ label|safe }}</label>
+                    <input type="number" step="any" name="{{ name }}" required value="{{ request.form.get(name, '') }}">
+                </div>
+                {% endfor %}
+
+                <!-- Dropdowns -->
+                <div class="form-row">
+                    <label>Call Duration Unit</label>
+                    <select name="avg_call_duration_unit">
+                        <option value="seconds" {% if request.form.get('avg_call_duration_unit') == 'seconds' %}selected{% endif %}>seconds</option>
+                        <option value="minutes" {% if request.form.get('avg_call_duration_unit') == 'minutes' %}selected{% endif %}>minutes</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>SIR Unit</label>
+                    <select name="SIR_unit">
+                        <option value="dB" {% if request.form.get('SIR_unit') == 'dB' %}selected{% endif %}>dB</option>
+                        <option value="Unitless" {% if request.form.get('SIR_unit') == 'Unitless' %}selected{% endif %}>Unitless</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>P₀ Unit</label>
+                    <select name="P0_unit">
+                        <option value="dB" {% if request.form.get('P0_unit') == 'dB' %}selected{% endif %}>dB</option>
+                        <option value="Watt" {% if request.form.get('P0_unit') == 'Watt' %}selected{% endif %}>Watt</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Sensitivity Unit</label>
+                    <select name="receiver_sensitivity_unit">
+                        <option value="dB" {% if request.form.get('receiver_sensitivity_unit') == 'dB' %}selected{% endif %}>dB</option>
+                        <option value="Watt" {% if request.form.get('receiver_sensitivity_unit') == 'Watt' %}selected{% endif %}>Watt</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>d₀ Unit</label>
+                    <select name="d0_unit">
+                        <option value="m" {% if request.form.get('d0_unit') == 'm' %}selected{% endif %}>meters</option>
+                        <option value="km" {% if request.form.get('d0_unit') == 'km' %}selected{% endif %}>kilometers</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Calculate</button>
+            </form>
+
+            <!-- ---------- RESULTS SIDE BY SIDE ---------- -->
+            {% if inputs or results %}
+            <div class="results-row">
+                {% if inputs %}
+                <div class="result-block">
+                    <h3> Inputs</h3>
+                    <ul>
+                        {% for key, value in inputs.items() %}
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if results %}
+                <div class="result-block">
+                    <h3> Results</h3>
+                    <ul>
+                        {% for key, value in results.items() %}
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- ---------- EXPLANATION + ERRORS ---------- -->
+            {% if explanation %}
+            <div class="result-block" style="margin-top: 1.5rem;">
+                <h3> Explanation</h3>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <!-- ---------- BACK BUTTON ---------- -->
+            <div class="back-centre">
+                <a href="/" class="btn-ghost">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

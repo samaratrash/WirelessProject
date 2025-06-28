@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>OFDM Transmission – Calculator</title>
+
+    <!-- Fonts & main CSS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <!-- small inline additions for result layout (same as q1) -->
+    <style>
+        .results-row      { display:flex; gap:2rem; flex-wrap:wrap; margin-top:1.5rem; }
+        .result-block     { flex:1 1 260px; background:#fff; border-radius:var(--radius); padding:1rem 1.5rem;
+                            box-shadow:0 4px 14px var(--clr-shadow); }
+        .result-block h3  { margin:0 0 0.75rem; font-weight:600; color:var(--clr-bg-2); }
+        .result-block ul  { list-style:none; margin:0; padding-left:0; }
+        .result-block li  { font-size:0.9rem; line-height:1.45; border-bottom:1px dashed #e2e8f0; padding:0.25rem 0; }
+        .back-centre      { margin-top:2rem; display:flex; justify-content:center; }
+        .error            { color:#d33; font-weight:600; margin-top:1rem; }
+    </style>
+</head>
+
+<body>
+    <!-- ===== HERO ===== -->
+    <header class="hero small-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>🌐 OFDM Transmission</h1>
+            <p>Evaluate OFDM parameters for effective multi-carrier design.</p>
+        </div>
+    </header>
+
+    <!-- ===== FORM + RESULTS ===== -->
+    <main class="calc-wrapper">
+        <section class="form-card">
+            <!-- ---------- INPUT FORM ---------- -->
+            <form method="POST" class="calc-form">
+                <div class="form-row">
+                    <label>Bandwidth per RB</label>
+                    <input type="number" step="any" name="bandwidth_rb" required />
+                </div>
+                <div class="form-row">
+                    <label>Bandwidth Unit</label>
+                    <select name="bandwidth_rb_unit">
+                        <option value="kHz">kHz</option>
+                        <option value="Hz">Hz</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Subcarrier Spacing</label>
+                    <input type="number" step="any" name="subcarrier_spacing" required />
+                </div>
+                <div class="form-row">
+                    <label>Subcarrier Unit</label>
+                    <select name="subcarrier_spacing_unit">
+                        <option value="kHz">kHz</option>
+                        <option value="Hz">Hz</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Number of OFDM Symbols</label>
+                    <input type="number" name="num_ofdm_symbols" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Duration per RB</label>
+                    <input type="number" step="any" name="duration_rb" required />
+                </div>
+                <div class="form-row">
+                    <label>Duration Unit</label>
+                    <select name="duration_rb_unit">
+                        <option value="ms">ms</option>
+                        <option value="seconds">seconds</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Modulation Order</label>
+                    <input type="number" name="modulation_order" required />
+                </div>
+
+                <div class="form-row">
+                    <label>Parallel Resource Blocks</label>
+                    <input type="number" name="num_parallel_rb" required />
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Calculate</button>
+            </form>
+
+            <!-- ---------- SIDE-BY-SIDE RESULTS ---------- -->
+            {% if inputs or results %}
+            <div class="results-row">
+                {% if inputs %}
+                <div class="result-block">
+                    <h3> Inputs</h3>
+                    <ul>
+                        {% for key, value in inputs.items() %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if results %}
+                <div class="result-block">
+                    <h3> Results</h3>
+                    <ul>
+                        {% for key, value in results.items() %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- ---------- EXPLANATION & ERROR ---------- -->
+            {% if explanation %}
+            <div class="result-block" style="margin-top:1.5rem;">
+                <h3>Explanation</h3>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <!-- ---------- BACK BUTTON ---------- -->
+            <div class="back-centre">
+                <a href="/" class="btn-ghost">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

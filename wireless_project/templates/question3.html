@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Link Budget Calculator</title>
+
+    <!-- Fonts & main CSS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <style>
+        .results-row      { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .result-block     { flex: 1 1 260px; background: #fff; border-radius: var(--radius); padding: 1rem 1.5rem;
+                            box-shadow: 0 4px 14px var(--clr-shadow); }
+        .result-block h3  { margin: 0 0 0.75rem; font-weight: 600; color: var(--clr-bg-2); }
+        .result-block ul  { list-style: none; margin: 0; padding-left: 0; }
+        .result-block li  { font-size: 0.9rem; line-height: 1.45; border-bottom: 1px dashed #e2e8f0; padding: 0.25rem 0; }
+        .back-centre      { margin-top: 2rem; display: flex; justify-content: center; }
+        .error            { color: #d33; font-weight: 600; margin-top: 1rem; }
+    </style>
+</head>
+
+<body>
+    <!-- ===== HERO ===== -->
+    <header class="hero small-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>📶 Link Budget Calculator</h1>
+            <p>Estimate power levels and margins for reliable wireless links.</p>
+        </div>
+    </header>
+
+    <!-- ===== FORM & RESULTS ===== -->
+    <main class="calc-wrapper">
+        <section class="form-card">
+            <!-- ---------- INPUT FORM ---------- -->
+            <form method="POST" class="calc-form">
+                {% for field in [
+                    ('Path Loss (Lₚ) [dB]', 'L_p'),
+                    ('Transmit Antenna Gain (Gₜ) [dB]', 'G_t'),
+                    ('Receive Antenna Gain (Gᵣ) [dB]', 'G_r'),
+                    ('Data Rate (R)', 'R'),
+                    ('Other Losses (Lₒ) [dB]', 'L_o'),
+                    ('Feed Line Loss (L𝒇) [dB]', 'L_f'),
+                    ('Fade Margin (Fₘₐᵣgᵢₙ) [dB]', 'F_margin'),
+                    ('Transmit Amplifier Gain (Aₜ) [dB]', 'A_t'),
+                    ('Receive Amplifier Gain (Aᵣ) [dB]', 'A_r'),
+                    ('Noise Figure (N𝒇) [dB]', 'N_f'),
+                    ('Noise Temperature (T) [K]', 'T'),
+                    ('Link Margin [dB]', 'link_margin'),
+                    ('Frequency [Hz]', 'frequency'),
+                    ('(Eᵦ/N₀) [dB]', 'SNR_per_bit'),
+                ] %}
+                <div class="form-row">
+                    <label>{{ field[0]|safe }}</label>
+                    <input type="number" name="{{ field[1] }}" step="any" required value="{{ request.form.get(field[1], '') }}">
+                </div>
+                {% endfor %}
+
+                <div class="form-row">
+                    <label>Rate Unit</label>
+                    <select name="R_unit">
+                        <option value="bps" {% if request.form.get('R_unit') == 'bps' %}selected{% endif %}>bps</option>
+                        <option value="kbps" {% if request.form.get('R_unit') == 'kbps' %}selected{% endif %}>kbps</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary full-width">Calculate</button>
+            </form>
+
+            <!-- ---------- SIDE-BY-SIDE RESULTS ---------- -->
+            {% if inputs or results %}
+            <div class="results-row">
+                {% if inputs %}
+                <div class="result-block">
+                    <h3> Inputs</h3>
+                    <ul>
+                        {% for key, value in inputs.items() %}
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if results %}
+                <div class="result-block">
+                    <h3> Results</h3>
+                    <ul>
+                        {% for key, value in results.items() %}
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- ---------- EXPLANATION & ERROR ---------- -->
+            {% if explanation %}
+            <div class="result-block" style="margin-top: 1.5rem;">
+                <h3> Explanation</h3>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <!-- ---------- BACK BUTTON ---------- -->
+            <div class="back-centre">
+                <a href="/" class="btn-ghost">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
