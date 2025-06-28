@@ -1,5 +1,0 @@
-flask
-numpy
-python-dotenv
-google-generativeai
-
